@@ -1,0 +1,30 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+    <link rel="stylesheet" href="{% static '' %}css/amazeui.min.css">
+    <link rel="stylesheet" href="{% static '' %}css/app.css">
+    <div class="am-u-sm-12 am-text-center" style="height: 2rem;line-height: 2rem;font-size: 16px;">
+        充值VIP
+    </div>
+    <div class="am-text-center">{{ content | safe }}</div>
+    <div class="am-u-sm-11 am-u-sm-centered">
+        <form class="am-form" id="form" method="post">
+            <fieldset class="myapp-login-form am-form-set">
+                <div class="am-form-group am-form-icon" style="margin-bottom:unset">
+                    <i class="am-icon-user"></i>
+                    {% csrf_token %}
+                    <input type="text" name="code" class="myapp-login-input-text am-form-field" placeholder="请输入激活密钥" value="{{ code }}">
+                </div>
+            </fieldset>
+            <button type="submit" id="w" class="myapp-login-form-submit am-btn am-btn-primary am-btn-block " style="font-size: .3733rem;">充 值</button>
+            <a href="{% url 'Account' %}" style="font-size: .3733rem;text-align: right;display: block;font-size: 0.2rem;margin-top: 0.2rem;padding-right: 0.2rem;">返回</a>
+        </form>
+    </div>
+    <script>
+        {% if error_status %}
+        alert('{{ error_status }}')
+        {% endif %}
+    </script>
+
+{% endblock %}

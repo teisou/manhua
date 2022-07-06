@@ -1,0 +1,70 @@
+<!DOCTYPE html>{% load staticfiles %}
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title> {% block title %}{% endblock %} 最新热门推荐|免费无遮无删减全集|韩国漫画大全|羞羞漫画 - 韩国漫画</title>
+    <meta name="keywords" content="免费韩漫无遮漫画大全,韩国漫画,成人漫画,免费漫画,韩漫街,无删减漫画,韩漫无羞遮漫画免费,韩漫无遮漫画,免费漫画大全" />
+    <meta name="description" content="每日更新韩漫无遮漫画，并且提供免费超过1000部漫画全集在线阅读！免费韩漫无遮漫画大全是韩国本土原创漫画始发站，目前众多韩漫无遮漫画原创者都在上传漫画至我们网站，本站也可以理解为是韩漫无遮漫画大全！" />
+
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <meta name="viewport" content="designWidth=750,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="{% static '' %}css/style.min.css">
+    <span style="white-space:pre">	</span>
+    <style>
+        html, body {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+{% block content %}
+
+{% endblock %}
+<div style="clear:both;height:1.4rem;"></div>
+<div class="backtop" id="icon-top" style="display:none">
+    <a href="javascript:void(0);" class="top">顶部</a>
+</div>
+
+
+
+
+<script src="{% static 'js/lib.js' %}"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/jquery.lazyload.js' %}"></script>
+
+<script>
+      $(function () {
+        $('#single-media div').show()
+        $('.portal-slick').slick({
+          arrows: false,
+          dots: true,
+          autoplay: true,
+          autoplaySpeed: 3000,
+          adaptiveHeight: true
+        })
+      })
+</script>
+
+<script>
+    (function($) {
+        $('img.lazy').lazyload({ effect: 'fadeIn' })
+    })(jQuery);
+  
+    var evt = 'onorientationchange' in window ? 'orientationchange' : 'resize'
+    window.addEventListener(evt, function () {
+        setTimeout(function () {
+            window.scrollTo(0, window.pageYOffset + 1)
+        }, 500)
+    }, false)
+
+    var _hmt = _hmt || [];
+</script>
+
+
+{% block javascript %}
+
+{% endblock %}
+
+</body>
+</html>

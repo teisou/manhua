@@ -1,0 +1,22 @@
+    <div class="tabar flb">
+        <nav class="nav hls1">
+            <div class="item">
+                <a href="{% url 'BookShelf' %}" class="{% if request.title == 'books' %}active{% endif %}">
+                    <i class="icon-book"></i>
+                    <div class="title">书架</div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="{% url 'manhua_index' %}" class="{% if request.title == 'index' %}active{% endif %}" title="免费韩漫无遮漫画大全">
+                    <i class="icon-home"></i>
+                    <div class="title">首页</div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="{% url 'Account' %}" class="{% if request.title == 'account' %}active{% endif %}">
+                    <i class="icon-user"></i>
+                    <div class="title">我的</div>
+                </a>
+            </div>
+        </nav>
+    </div>

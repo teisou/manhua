@@ -1,0 +1,232 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block title %}{{ image_info.chapter.title }} - [{{ image_info.chapter.books.name }}]{% endblock %}
+{% block content %}
+    <div class="rt-bar" style="position: absolute">
+        <div class="row">
+            <div class="col icon">
+                <a href="{% url 'manhua_comics' image_info.chapter.books.id %}" title="{{ image_info.chapter.books.title }}">
+                    <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+                        <path d="M29.56 39.47a2 2 0 0 1-1.38-.56L8.45 20 28.17 1.09A2 2 0 1 1 30.94 4L14.23 20l16.71 16a2 2 0 0 1-1.38 3.44z" fill="#ff730a"></path>
+                    </svg>
+                </a>
+            </div>
+            <div class="col title">{{ image_info.chapter.title }}</div>
+            <div class="col link">
+                <a href="{% url 'manhua_index' %}" title="返回首页首页">首页</a>
+            </div>
+        </div>
+    </div>
+
+    <article class="read-article" onclick="chapter_footer_toggle()">
+        {% for image in images %}
+        <figure class="item">
+            <img class="show-menu lazy" src="{% static 'images/hanmanjie.gif' %}" data-id="{{ forloop.counter }}" data-original="{{ image.get_url }}" style="background: rgb(238, 238, 238); display: block;" alt="《{{ image.chapter.books.name }}》{{ image.chapter.title }}">
+        </figure>
+        {% endfor %}
+    </article>
+
+    <strong>{{ book_info.name }} - {{ image_info.chapter.title }} </strong>简介：{{ book_info.description }}
+
+    <div class="read-footer">
+
+        <div class="row">
+            <div class="col">
+                <a href="javascript:void(0);" id="evt-add-collect-btn"  class="shelf {% if books_shelf %}active{% endif %}"  style="-webkit-tap-highlight-color: rgba(0,0,0,0);">
+                    <i class="icon-fav"></i>收藏
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url 'manhua_comics' book_info.id %}" title="{{ book_info.name }}目录" style="-webkit-tap-highlight-color: rgba(0,0,0,0);">
+                    <i class="icon-dir"></i>目录
+                </a>
+            </div>
+            <div class="col" id="evt-add-like-btn">
+                <a href="javascript:void(0);" id="showcoll"  class="zan"  style="-webkit-tap-highlight-color: rgba(0,0,0,0);">
+                    <i class="icon-good"></i>赞
+                    <span id="showlikesnum">{{ book_info.link_count }}</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="control clearfix">
+            <div class="item prev">
+                {% if prev_book %}
+                    <a href="{% url 'manhua_chapter' prev_book.id %}">上一话<i></i></a>
+                {% endif %}
+            </div>
+            <div class="item next">
+                {% if next_book %}
+                    <a href="{% url 'manhua_chapter' next_book.id %}">下一话<i></i></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="tabar flb chapter_footer" style="display: none">
+        <nav class="nav hls1">
+            <div class="item">
+                {% if prev_book %}
+                    <a href="{% url 'manhua_chapter' prev_book.id %}">上一话<i></i></a>
+                {% else %}
+                    <a>上一话</a>
+                {% endif %}
+            </div>
+            <div class="item">
+                <a href="{% url 'manhua_comics' image_info.chapter.books.id %}" title="返回目录">
+                    <i class="icon-home"></i>
+                    <div class="title">目录</div>
+                </a>
+            </div>
+            <div class="item">
+                {% if next_book %}
+                    <a href="{% url 'manhua_chapter' next_book.id %}">下一话<i></i></a>
+                {% else %}
+                    <a>下一话</a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+
+    {% if not views %}
+
+        <style>
+  #needPay {
+    position: fixed;
+    top: 7%;
+    right: 0;
+    left: 0;
+    z-index: 999;
+    display: none;
+    margin: 0 auto;
+    padding: 0 0 10px 0;
+    width: 90%;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    box-shadow: 10px 10px 5px #eee;
+  }
+
+  #needPay #close {
+    display: block;
+    margin: 20px 0 0;
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 700;
+    line-height: 40px
+  }
+
+  #needPay .notices {
+    margin: 0 auto;
+    border-bottom: 1px solid #eee;
+    color: #f66;
+    font-weight: 700;
+    font-size: 1em;
+    line-height: 40px
+  }
+
+  #needPay .notices #close {
+    position: absolute;
+    top: -28px;
+    right: 10px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #999;
+    border-radius: 50%;
+    background: #fafafa url(/static/images/del.webp?v2) no-repeat center center;
+    background-size: 24px 24px;
+    text-indent: -9999999px
+  }
+
+  #needPay .red-text {
+    display: block;
+    margin: 0 auto;
+    color: red;
+    text-align: center;
+  }
+
+  .need-pay-row {
+    display: block;
+    margin: 0 auto 10px;
+    width: 80%
+  }
+
+  #needPay .recharge-notice {
+    display: none;
+  }
+
+  .zshu {
+    text-align: center;
+  }
+
+  .zshu a {
+    display: block;
+    padding: .2rem .5rem;
+    border: 1px solid #F44336;
+    background: #F44336;
+    width: 40%;
+    color: #fff;
+    margin: 1rem auto 0rem auto;
+    border-radius: .3rem;
+    font-size: .38rem;
+    text-align: center;
+  }
+</style>
+    <div id="needPay" style="display: block;">
+        <div class="notices" align="center">您的账户权限不足<a href="javascript:void(0);" id="close">关闭</a></div>
+        <div class="need-pay-row red-text" style="padding: 30px 0; font-size: 20px;">该章节只免费提供小部分试看, 请升级VIP后再进行观看</div>
+        <div class="recharge-list">
+{#            <div class="item">#}
+{#                <input type="radio" name="recharge" value="9">#}
+{#                <a href="javascript:void(0);" class="container" data-fee="9">#}
+{#                    <div class="body">#}
+{#                        <div class="num">9元</div>#}
+{#                        <div class="bio">900&#43;20书币</div>#}
+{#                        <div class="text">多送0元</div>#}
+{#                    </div>#}
+{#                    <label class="label label-first"></label>#}
+{#                </a>#}
+{#            </div>#}
+
+            <div class="action">
+                <a href="{% url 'Account' %}" class="btn">前往充值</a>
+            </div>
+        </div>
+
+    </div>
+    {% endif %}
+    <script>
+        function chapter_footer_toggle () {
+            $('.chapter_footer').toggle()
+        }
+    </script>
+{% endblock %}
+
+{% block javascript %}
+<script>
+      $('#evt-add-collect-btn').click(function (e) {
+        e.preventDefault()
+        var self = $(this)
+
+        $.get("{% url 'collect_comic' book_info.id %}")
+          .done(function (resp) {
+            if (1 === resp.code) {
+              alert(resp.msg)
+              return
+            }
+
+            if (resp.data.op === 'create') {
+              self.addClass('active')
+            } else {
+              self.removeClass('active')
+            }
+          }).fail(function (x, y, z) {
+          alert(z)
+        })
+      })
+</script>
+{% endblock %}

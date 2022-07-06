@@ -1,0 +1,137 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block title %}{{ book_info.name }}{% endblock %}
+{% block content %}
+    <div class="cover-box">
+        <div class="bg">
+            <img src="{{ book_info.get_extension_url }}" width="375" height="245" title="{{ book_info.name }}">
+            <div class="gradient"></div>
+        </div>
+        <div class="container">
+            <div class="title">{{ book_info.name }}</div>
+            <div class="tags">
+
+                <div class="label">
+                    <div class="item"><a href="javascript:void(0);">{{ book_info.category.name }}</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="action">
+            <a href="{% url 'manhua_index' %}" class="back" title="{{ book_info.name }}">
+                <svg width="12" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 40">
+                    <path d="M21.56 39.47a2 2 0 0 1-1.38-.56L.44 20 20.18 1.09A2.01 2.01 0 1 1 22.95 4L6.23 20l16.72 16a2 2 0 0 1-1.38 3.44z" fill="#fff"></path>
+                </svg>
+            </a>
+            <div id="showcollect">
+                {% if books_shelf %}
+                    <a href="javascript:collect_comic();" id="evt-add-collect-btn"  class="btn gray">已收藏</a>
+                {% else %}
+                <a href="javascript:collect_comic();" id="evt-add-collect-btn" class="btn" title="{{ book_info.name }}">
+                    <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path fill="#fff" d="M20 8h-8V0H8v8H0v4h8v8h4v-8h8V8"></path>
+                    </svg>
+                    收藏
+                </a>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+
+{#    <nav class="bm-tabs">#}
+{#        <div class="item">#}
+{#            <a href="{% url 'manhua_comics' book_info.id %}" type="info" class="active" title="健身房详情">详情</a>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <a href="https://hanmanjie.com/comics/20558/list.shtml" type="chapters" id="btn_chap" title="健身房全集">选集</a>#}
+{#        </div>#}
+{#    </nav>#}
+
+    <div class="ac-box" id="book-info" style="display: block;">
+        <article class="article">
+            <div class="head">
+                <div class="title">漫画简介：</div>
+            </div>
+            <div class="body">
+                {{ book_info.description }}
+            </div>
+            <div class="author">作者：{{ book_info.author }}</div>
+        </article>
+        <div class="bar">
+            <div class="col" style="text-align: left"><i class="icon-hot"></i> 人气值 {{ book_info.read_count }}</div>
+            <div class="col" style="text-align: center"><i class="icon-like"></i> {{ book_info.like_count }} 人已点赞</div>
+            <!--div class="col" style="text-align: right"><i class="icon-mark"></i> 2000人已收藏</div-->
+        </div>
+    </div>
+
+
+    <div class="ac-box mb-tabar" id="chapters" style="display: block;margin-bottom: .03rem;">
+        <div class="ch">
+            <div class="title">{{ book_info.get_status_display  }}
+                <span class="small"> {{ chapters.last.title }}</span>
+            </div>
+        </div>
+        <div class="list" id="html_box">
+            {% for chapter in chapters %}
+            <div class="item {% if chapter.free_flag == 0 and is_free == 0 %}lock{% endif %}">
+                <a href="{% url 'manhua_chapter' chapter.id %}" style="text-align:center;" title="{{ chapter.title }}">
+                    {{ chapter.title }}
+                    <span>{% if chapter.free_flag == 0 and is_free == 0 %}{{ chapter.points }} 书币{% endif %} </span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="book-bar">
+        <div class="inner">
+        {% if chapters.first %}
+            <div class="body">
+                <span class="chapter">第 1 话</span>
+                <span class="title">{{ chapters.first.title }}</span>
+            </div>
+            <div class="action">
+                <a href="{% url 'manhua_chapter' chapters.first.id %}" class="btn" title="{{ book_info.name }} 第 1 话">开始阅读</a>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+      document.oncontextmenu = new Function('return false')
+      document.onselectstart = new Function('return false')
+
+      $(document).on('click', '#evt-add-collect-btn', function (e) {
+        e.preventDefault()
+        var self = $(this)
+
+        collect_comic()
+      })
+
+      function collect_comic() {
+        $.get("{% url 'collect_comic' book_info.id %}")
+          .done(function (resp) {
+            if (500 === resp.code) {
+              alert(resp.msg)
+              return
+            }
+
+            if (resp.data.op === 'create') {
+              var newtag = '<a href="javascript:collect_comic();" id="evt-add-collect-btn"  class="btn gray">已收藏</a>'
+              $('#showcollect').html(newtag)
+            } else {
+              var newtag = '<a href="javascript:collect_comic();" id="evt-add-collect-btn"  class="btn"><svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#fff" d="M20 8h-8V0H8v8H0v4h8v8h4v-8h8V8"></path></svg>收藏</a>'
+              $('#showcollect').html(newtag)
+            }
+          }).fail(function (x, y, z) {
+          alert(z)
+        })
+      }
+
+    </script>
+{% endblock %}

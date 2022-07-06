@@ -1,0 +1,54 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block title %}最近阅读{% endblock %}
+{% block content %}
+<div class="navbar flt">
+    <nav class="tab-box">
+        <div class="item">
+            <a href="{% url 'BookShelf' %}" class="active">收藏</a>
+        </div>
+        <div class="item">
+            <a href="{% url 'RecentRead' %}" >历史</a>
+        </div>
+    </nav>
+    <div class="action"></div>
+</div>
+
+<div class="bs-box" style="bottom: 1.333rem;margin-bottom: 0px;">
+    <div class="row-list" id="shelf-container" data-scroll="true">
+        {% for data in data_list %}
+            <div class="item" data-looking="0">
+                <a href="{% url 'manhua_comics' data.book.id %}">
+                    <div class="cover">
+                        <img src="{{ data.book.get_cover_url }}" style="background: rgb(238, 238, 238); display: block;width:125px;height:166px;">
+                    </div>
+                    <div class="body">
+                        <div class="title">{{ data.book.name }}</div>
+                        <div class="text">共 {{ data.book.chapter.all | length }} 话</div>
+                    </div>
+                </a>
+                <div class="cp-box" style="display:none;">
+                    <input type="checkbox" name="edit_history_books" class="selected-switch" value="0_10231">
+                    <div class="swtich"></div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="common-ne">
+                <div class="subject">您还没有收藏记录</div>
+                <div class="action">
+                    <a href="/" class="btn">去找几本看看</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% include 'manhua/menu.html' %}
+
+
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

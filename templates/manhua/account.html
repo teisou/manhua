@@ -1,0 +1,123 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="uh-box">
+        <img src="{% static '' %}images/home.png" class="bg">
+        <div class="container">
+            <div class="avatar">
+                <input type="file" name="file" class="file" style="display:none;" accept="image/jpeg,image/gif,image/jpg,image/png">
+                <img width="65" height="65" id="show-avatar" src="{% static '' %}images/user.png">
+
+            </div>
+            <div class="body">
+                <div class="title">账号：{{ request.user.username }}<br>密码：<span id="show">查看密码</span></div>
+                <div class="text">
+                    <span style="display: block;">ID：{{ request.user.uid }}</span>
+
+                </div>
+            </div>
+
+{#            <div class="action">#}
+{##}
+{#                <a href="javascript:void(0);" onclick="SignOn(this);" class="btn btn-sign" style="color:#2196F3">签到</a>#}
+{##}
+{#            </div>#}
+        </div>
+    </div>
+
+    <div class="uh-row" style="position: relative;">
+        <div class="col">
+            <div class="num" id="user-gold-balance">{% if request.user_info.is_vip %}尊贵VIP{% else %}普通用户{% endif %} </div>
+            <div class="title">用户类型</div>
+        </div>
+        <div class="col">
+            <div class="num today-bean">{{ request.user.uid }}</div>
+            <div class="title">用户ID</div>
+        </div>
+    </div>
+
+    <div class="uh-nav mb-10 mb-tabar" style="clear:both">
+        <div class="item mt-10">
+            <a href="javascript:void(0);" class="link">
+                <i class="icon-account"></i>
+                <div class="title">我的账户</div>
+            </a>
+            <div class="action">
+                <a href="{% url 'vip' %}" class="btn">立即充值</a>
+            </div>
+        </div>
+
+{#        <div class="item tl">#}
+{#            <a href="/user/record" class="link">#}
+{#                <i class="icon-buy"></i>#}
+{#                <div class="title">账单明细</div>#}
+{#                <div class="text">#}
+{#                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 14 24"><title>right-arrow</title>#}
+{#                        <path d="M1.91 1.93L12.06 12 1.91 22" fill="none" stroke="#888888" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>#}
+{#                    </svg>#}
+{#                </div>#}
+{#            </a>#}
+{#        </div>#}
+
+{#        <div class="item tl">#}
+{#            <a href="/user/phone" class="link">#}
+{#                <i class="icon-money"></i>#}
+{#                <div class="title">绑定手机号码</div>#}
+{#                <div class="text" style="padding-right: 0.1rem;">#}
+{##}
+{#                </div>#}
+{#            </a>#}
+{#        </div>#}
+        {% if request.user_info.is_vip %}
+        <div class="item tl">
+            <a href="javascript:void(0);" class="link">
+                <i class="icon-account"></i>
+                <div class="title">到期时间: {{ request.user_info.expire_time | date:"Y-m-d" }}</div>
+            </a>
+        </div>
+        {% endif %}
+        <div class="item tl">
+            <a href="{% url 'Login' %}" class="link">
+                <i class="icon-account"></i>
+                <div class="title">切换登录</div>
+            </a>
+        </div>
+        <div class="item tl">
+            <a href="{% url 'user_logout' %}" class="link">
+                <i class="icon-account"></i>
+                <div class="title">退出账号</div>
+            </a>
+        </div>
+    </div>
+
+
+{% include 'manhua/menu.html' %}
+
+
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+      $(function () {
+        $('#single-media div').show()
+        $('.portal-slick').slick({
+          arrows: false,
+          dots: true,
+          autoplay: true,
+          autoplaySpeed: 3000,
+          adaptiveHeight: true
+        })
+        $('#show').click(function(){
+
+          if($(this).attr("show") == "true"){
+              $(this).html("查看密码")
+              $(this).attr("show",false)
+          }else{
+            $(this).html("{{ request.password }}")
+            $(this).attr("show",true)
+          }
+        })
+      })
+</script>
+{% endblock %}

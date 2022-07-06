@@ -1,0 +1,172 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="navbar flt">
+        <a href="{% url 'manhua_index' %}" class="active" title="免费韩漫大全"><img src="{% static '' %}images/23.png"  alt="韩漫街"></a></a>
+        <div class="action">
+            <a href="{% url 'manhua_serach' %}" class="btn" title="韩国漫画搜索">
+                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                    <path d="M35.94 35.94l7.71 7.71" fill="none" stroke="#fff" stroke-width="3"/>
+                    <circle cx="23.3" cy="23.3" r="18.5" fill="none" stroke="#fff" stroke-width="3"/>
+                    <path d="M11.72 23.15A12 12 0 0 1 24.5 12" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="3"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div id="banner-container">
+        <div class="loading">
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+        <div class="portal-slick mt-navbar">
+            {% for book in top_manhua %}
+            <div class="item">
+                <a href="{% url 'manhua_comics' book.0 %}" rel="nofollow">
+                    <img class="slide_loading" src="{{ book.1 }}" data-original="{{ book.1 }}" alt="热门韩漫韩漫街" width="375" height="245"/>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{#    <nav class="portal-nav">#}
+{#        <div class="item">#}
+{#            <a href="/free">#}
+{#                <img src="{% static '' %}images/212154388893002996.png" class="item_cate" alt="最新韩漫无遮漫画大全"/>#}
+{#                <div class="title">免费</div>#}
+{#            </a>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <a href="https://www.toomicsvip.com/ad/?tuiguang" rel="nofollow">#}
+{#                <img src="{% static '' %}images/164830153005004603.png" class="item_cate" alt="免费无删减无遮韩漫"/>#}
+{#                <div class="title">特供</div>#}
+{#            </a>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <a href="https://app.hanmanren.com/" rel="nofollow">#}
+{#                <img src="{% static '' %}images/164820089904009677.png" class="item_cate" alt="免费无删减无遮韩漫vip特惠"/>#}
+{#                <div class="title">精选</div>#}
+{#            </a>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <a href="https://app.hanmanjie.com/" rel="nofollow">#}
+{#                <img src="{% static '' %}images/164844170237005792.png" class="item_cate" alt="免费无删减无遮韩漫APP下载"/>#}
+{#                <div class="title">APP下载</div>#}
+{#            </a>#}
+{#        </div>#}
+{#    </nav>#}
+
+    <!-- ad -->
+{#    <a href="https://www.toomicsvip.com/ad/?tuiguang" rel="nofollow">#}
+{#        <img src="https://img.hying.top/yii/wsj.gif"  width="360" height="120" alt="韩漫无遮漫画大全 APP下载">#}
+{#    </a>#}
+
+    <!-- 热门推荐 -->
+
+    <div class="bm-box mt-10">
+        <div class="head">
+            <div class="title dot">热门推荐</div>
+            <div class="pull-right">
+                <a href="{% url 'manhua_tag' %}?keyword=热门推荐" title="热门推荐">
+                    更多
+                    <svg width="7" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 24">
+                        <title>right-arrow</title>
+                        <path d="M1.91 1.93L12.06 12 1.91 22" fill="none" stroke="#ff5420" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="books-row">
+
+            {% for book in read_books %}
+                <div class="item" style="position:relative;">
+                    <a href="{% url 'manhua_comics' book.id %}" title="{{ book.name }}">
+                        <img class="lazy" src="{% static 'images/hanmanjie.gif' %}" data-original="{{ book.get_cover_url }}"
+                             style="width:110px;height:146px;" alt="{{ book.title }}">
+                        <div style="position:absolute;z-index:2;left:4px;bottom:40px;margin-bottom:5px; padding:1px 5px 2px 5px;">
+                            {% if book.status == 'serialized' %}
+                                <img src="{% static '' %}images/lianwan_0.png">
+                            {% else %}
+                                <img src="{% static '' %}images/lianwan_1.png">
+                            {% endif %}
+
+                        </div>
+                        <div class="title">{{ book.name }}</div></a>
+                    {% if book.chapter.last %}
+                        <a href="{% url 'manhua_chapter' book.chapter.last.id %}" title="{{ book.name }}"><div class="text">更新至{{ book.chapter.count }}话</div></a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="bm-box mt-10">
+        <div class="head">
+            <div class="title dot">最近更新</div>
+            <div class="pull-right">
+                <a href="{% url 'manhua_tag' %}?keyword=最近更新" title="最近更新">
+                    更多
+                    <svg width="7" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 24">
+                        <title>right-arrow</title>
+                        <path d="M1.91 1.93L12.06 12 1.91 22" fill="none" stroke="#ff5420" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="books-row">
+            {% for book in books %}
+                <div class="item" style="position:relative;">
+                    <a href="{% url 'manhua_comics' book.id %}" title="{{ book.name }}">
+                        <img class="lazy" src="{% static 'images/hanmanjie.gif' %}" data-original="{{ book.get_cover_url }}"
+                             style="width:110px;height:146px;" alt="{{ book.title }}">
+                        <div style="position:absolute;z-index:2;left:4px;bottom:40px;margin-bottom:5px; padding:1px 5px 2px 5px;">
+                            {% if book.status == 'serialized' %}
+                                <img src="{% static '' %}images/lianwan_0.png">
+                            {% else %}
+                                <img src="{% static '' %}images/lianwan_1.png">
+                            {% endif %}
+                        </div>
+                        <div class="title">{{ book.name }}</div></a>
+                    {% if book.chapter.last %}
+                        <a href="{% url 'manhua_chapter' book.chapter.last.id %}" title="{{ book.name }}"><div class="text">更新至{{ book.chapter.count }}话</div></a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="bm-box mt-10">
+        <div class="head">
+            <div class="title dot">免费漫画</div>
+            <div class="pull-right">
+                <a href="{% url 'manhua_tag' %}?keyword=免费漫画" title="韩国免费漫画大全">
+                    更多
+                    <svg width="7" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 24">
+                        <title>right-arrow</title>
+                        <path d="M1.91 1.93L12.06 12 1.91 22" fill="none" stroke="#ff5420" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="books-row">
+
+            {% for book in free_books %}
+                <div style="width:100%;padding-bottom: 20px;border-bottom: 1px solid #ddd;position:relative;">
+                    <img class="lazy" src="{% static 'images/hanmanjie.gif' %}" data-original="{{ book.get_cover_url}}" style="width:88px;height:110px;float:left;margin:10px;" alt="{{ book.name }}">
+                    <div class="title" style="margin-top: 15px;font-size: 17px;color: #000;">{{ book.name }}</div>
+                    <div class="text" style="margin-top: 5px;font-size: 14px;color: #666;">{{ book.author }}</div>
+                    <div class="text" style="margin-top: 5px;font-size: 14px;color: #666;height:40px;text-overflow: ellipsis;overflow: hidden; word-wrap: break-word;word-break: break-all;">{{ book.description }}</div>
+                    <div onclick="window.location.href='{% url 'manhua_comics' book.id %}'" style="position: absolute;top: 10px;right: 10px;padding: 8px;border: 1px solid #FF9800;border-radius: 5px;color: #FF9800;" title="{{ book.name }}">立即阅读</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% include 'manhua/menu.html' %}
+
+
+{% endblock %}

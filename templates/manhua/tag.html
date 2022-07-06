@@ -1,0 +1,71 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="search-bar search-multiple">
+        <div class="inner">
+            <div class="field">
+                <div class="icon">
+                    <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                        <path d="M31.21 27.4l-5.15-5.15a13.06 13.06 0 1 0-2.52 3.13l4.84 4.84zM3.8 15.78a11 11 0 1 1 11 11 11 11 0 0 1-11-11z" fill="#999"/>
+                    </svg>
+                </div>
+                <input type="text" placeholder="输入漫画名或作者" id="search_keyword" maxlength="18" value="{{ keyword }}" onkeyup="keyup_search(this);"/>
+            </div>
+            <button onclick="location.href='{% url 'manhua_index' %}';" id="show_cleare_btn">取消</button>
+            <button id="show_sear_btn" style="display: none;cursor: pointer" onclick="keySearchHref()" >搜索</button>
+        </div>
+
+        <div class="res-text">搜索「<span class="typo-orange">{{ keyword }}</span>」的结果，共<span class="typo-orange">{{ serach_books | length }}</span>条</div>
+
+    </div>
+
+    <div class="books-res" id="search-result-container">
+        {% for book in serach_books %}
+        <div class="item">
+            <a href="{% url 'manhua_comics' book.id %}" class="link">
+                <div class="cover">
+                    <img class="lazy" src="{% static 'images/hanmanjie.gif' %}" data-original="{{ book.get_cover_url }}">
+                </div>
+                <div class="body">
+                    <div class="title">{{ book.name }}</div>
+                    <div class="author">作者：{{ book.author }}</div>
+                    <div class="text">{{ book.description }}</div>
+                    <div class="bottom">
+                        <span class="col"><i class="icon-gray-hot"></i> {{ book.read_count }}</span>
+                        <span class="col"><i class="icon-hand"></i> {{ book.like_count }}</span>
+                    </div>
+                </div>
+            </a>
+            <div class="action">
+                <a href="{% url 'manhua_comics' book.id %}" class="btn">阅读</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        $(function () {
+
+            $('#search_keyword').keyup(function (event) {
+                var key_v = $('#search_keyword').val()
+                if (key_v == '') {
+                    $('#show_cleare_btn').show()
+                    $('#show_sear_btn').hide()
+                    return false
+                }
+                if (event.keyCode === 13) {
+                    keySearchHref()
+                }
+            })
+        })
+
+        $('#show_sear_btn').click(function () {
+            keySearchHref()
+        })
+
+        function keySearchHref () {
+            window.location.href = '{% url 'manhua_tag'  %}?keyword=' + $('#search_keyword').val()
+        }
+    </script>
+
+{% endblock %}

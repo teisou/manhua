@@ -1,0 +1,34 @@
+{% extends 'manhua/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+    <link rel="stylesheet" href="{% static '' %}css/amazeui.min.css">
+    <link rel="stylesheet" href="{% static '' %}css/app.css">
+    <div class="am-u-sm-12 am-text-center" style="height: 2rem;line-height: 2rem;font-size: 16px;">
+        登录
+    </div>
+
+    <div class="am-u-sm-11 am-u-sm-centered">
+        <form class="am-form" id="form" method="post">
+            <fieldset class="myapp-login-form am-form-set">
+                {% csrf_token %}
+                <div class="am-form-group am-form-icon" style="margin-bottom:unset">
+                    <i class="am-icon-user"></i>
+                    <input type="text" name="username" class="myapp-login-input-text am-form-field" placeholder="请输入您的账号">
+                </div>
+                <div class="am-form-group am-form-icon" style="margin-bottom:unset">
+                    <i class="am-icon-lock"></i>
+                    <input type="password" name="password" class="myapp-login-input-text am-form-field" placeholder="至少6个字符">
+                </div>
+            </fieldset>
+            <button type="submit" id="w" class="myapp-login-form-submit am-btn am-btn-primary am-btn-block " style="font-size: .3733rem;">登 陆</button>
+            <a href="{% url 'manhua_index' %}" style="font-size: .3733rem;text-align: right;display: block;font-size: 0.2rem;margin-top: 0.2rem;padding-right: 0.2rem;">返回首页</a>
+        </form>
+    </div>
+    <script>
+        {% if error_status %}
+        alert('账号或者密码错误')
+        {% endif %}
+    </script>
+
+{% endblock %}
