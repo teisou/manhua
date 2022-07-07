@@ -66,6 +66,8 @@ class XieMan():
     # 下载图片
     def download_image(self, url):
         try:
+            url = url.replace('9welksk3.yxsw888.com', 'images.111557.xyz')
+            url = url.replace('lsplxmd9k3.dayi58.com', 'images.111557.xyz')
             print(f'正在下载 {url}')
 
             # 获取文件名
